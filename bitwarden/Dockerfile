@@ -36,7 +36,7 @@ RUN \
 
 # Copy root filesystem
 COPY rootfs /
-
+RUN chmod -R +x /etc/s6-overlay
 # Build arguments
 ARG BUILD_ARCH
 ARG BUILD_DATE

@@ -44,8 +44,23 @@ if bashio::config.has_value 'log_level'; then
     export LOG_LEVEL="${log_level}"
 fi
 
+if bashio::config.has_value 'admin_enable'; then
+    admin_enable=$(bashio::config 'admin_enable')
+fi
+
+if bashio::config.has_value 'web_vault_enable'; then
+    web_vault_enable=$(bashio::config 'web_vault_enable')
+    export WEB_VAULT_ENABLED=${web_vault_enable}
+fi
+
+bashio::log.info "Admin Enabled: ${admin_enable}"
+
+if ! "${admin_enable}" == "true" && bashio::fs.file_exists '/data/config.json' ; then
+	rm -f /data/config.json
+fi
+
 # Show admin token in the log, if config does not exist.
-if ! bashio::fs.file_exists '/data/config.json'; then
+if ! bashio::fs.file_exists '/data/config.json' && "${admin_enable}" == "true" ; then
     admin_token=$(openssl rand -base64 48)
     export ADMIN_TOKEN="${admin_token}"
 
@@ -71,6 +86,7 @@ if bashio::config.has_value 'request_size_limit'; then
     request_size_limit=$(bashio::config 'request_size_limit')
     export ROCKET_LIMITS="{json=${request_size_limit}}"
 fi
+bashio::log.info "Started with WEB_VAULT_ENABLED: ${WEB_VAULT_ENABLED}"
 
 # Run the Bitwarden server
 bashio::log.info 'Starting the Vaultwarden server...'

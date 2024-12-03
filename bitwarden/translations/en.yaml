@@ -24,5 +24,13 @@ configuration:
       Optionally set the size limit of HTTP requests on the API of
       Vaultwarden. This might be needed to support larger imports.
       The default is 10485760, which is 10MB.
+  web_vault_enable:
+    name: Web vault interface
+    description: >-
+      Enables/Disables web vault
+  admin_enable:
+    name: Admin interface
+    description: >-
+      Enables/Disables admin interface, disabling will remove /data/config.json, all the admin configuration will be lost.
 network:
   7277/tcp: Web interface
